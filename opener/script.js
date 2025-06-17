@@ -1,22 +1,45 @@
-function make_dat_shit(){
-	var urls=document.getElementById("urls").value;
-	var urls=urls.split('\n');
-	var urlindex=0;
-	var fileindex=0;
-	var s;
-
-	for(var i=0;i<urls.length;i++){
-		s=urls[i];
-		s=s.replace(/^\s+|\s+$/g,'');
-		if(s){
-			if(s.substr(0,7)=='file://'){fileindex++;continue;}
-			urlindex++;
-			if((s.substr(0,7)!='http://')&&(s.substr(0,8)!='https://')&&(s.substr(0,6)!='ftp://')&&(s.substr(0,7)!='file://')){s='http://'+s;}
-			window.open(s);
+function openBatch() {
+	const textarea = document.getElementById("urls");
+	const lines = textarea.value.split("\n");
+	const batchSize = parseInt(document.getElementById("batchSize").value, 10);
+	let opened = 0;
+	let skippedFiles = 0;
+	const remaining = [];
+  
+	lines.forEach(line => {
+	  const text = line.trim();
+	  if (!text) {
+		remaining.push(line);
+		return;
+	  }
+	  if (text.startsWith("file://")) {
+		skippedFiles++;
+		remaining.push(line);
+		return;
+	  }
+	  if (batchSize === 0 || opened < batchSize) {
+		let url = text;
+		if (!/^https?:\/\//i.test(url) && !/^ftp:\/\//i.test(url)) {
+		  url = "http://" + url;
 		}
+		window.open(url);
+		opened++;
+	  } else {
+		remaining.push(line);
+	  }
+	});
+  
+	if (opened === 0) {
+	  alert("No URLs opened.");
 	}
-	if(0==urlindex){
-		alert("Found no links to open!");
+	if (skippedFiles > 0) {
+	  alert(skippedFiles + " file:// links were skipped.");
 	}
-	if (fileindex>0){alert("N.B. all modern browsers block scripts from openning files! Thus all file:// links were skipped."+" ["+fileindex+"]");}
-}
+  
+	textarea.value = remaining.join("\n");
+  }
+  
+  function clearAll() {
+	document.getElementById("urls").value = "";
+  }
+  
