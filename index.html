@@ -15,17 +15,30 @@
             margin: 0;
             height: 100%;
             display: flex;
+            flex-direction: column;
         }
         
-        h1 {
+        #content {
             margin: auto;
             font-size: 36px;
             color: #333;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
+
+        a {
+            color: dodgerblue;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #63b1ff;
+        }
     </style>
 </head>
 <body>
-    <h1>AyQWERTY's Tools</h1>
+    <div id="content">
+        <h1>AyQWERTY's Tools</h1>
+        <a href="./opener">Opener</a>
+    </div>
 </body>
 </html>
